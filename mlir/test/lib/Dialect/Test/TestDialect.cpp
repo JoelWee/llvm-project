@@ -587,6 +587,17 @@ OpFoldResult TestOpFoldWithFoldAdaptor::fold(FoldAdaptor adaptor) {
   return IntegerAttr::get(getType(), sum);
 }
 
+LogicalResult TestOpWithProperties::inferReturnTypes(
+    MLIRContext *, std::optional<Location> location, ValueRange operands,
+    DictionaryAttr attributes, OpaqueProperties properties, RegionRange regions,
+    SmallVectorImpl<Type> &inferredReturnTypes) {
+  TestOpWithProperties::Adaptor adaptor(operands, attributes, properties,
+                                        regions);
+  // Fails when trying to access the "b" operand.
+  if (!adaptor.getB().empty()) return failure();
+  return success();
+}
+
 LogicalResult OpWithInferTypeInterfaceOp::inferReturnTypes(
     MLIRContext *, std::optional<Location> location, ValueRange operands,
     DictionaryAttr attributes, OpaqueProperties properties, RegionRange regions,

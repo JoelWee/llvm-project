@@ -2843,12 +2843,16 @@ def TestVersionedOpC : TEST_Op<"versionedC"> {
 
 
 // Op with a properties struct defined inline.
-def TestOpWithProperties : TEST_Op<"with_properties"> {
+def TestOpWithProperties : TEST_Op<"with_properties", [DeclareOpInterfaceMethods<InferTypeOpInterface>]> {
   let assemblyFormat = "prop-dict attr-dict";
   let arguments = (ins
     IntProperty<"int64_t">:$a,
     StrAttr:$b, // Attributes can directly be used here.
     ArrayProperty<"int64_t", 4>:$array // example of an array
+  );
+
+  let results = (outs
+    Variadic<AnyType>:$results
   );
 }
 
